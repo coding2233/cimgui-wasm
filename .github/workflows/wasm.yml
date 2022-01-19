@@ -16,6 +16,12 @@ jobs:
       with:
         submodules: 'true'
 
+    - uses: check files
+      run: |
+        ls -alh
+        ls -alh ./cimgui
+        ls -alh ./cimgui/imgui
+
     - name: setup emsdk
       run: |
         git clone https://github.com/emscripten-core/emsdk.git

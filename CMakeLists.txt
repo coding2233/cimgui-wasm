@@ -16,7 +16,7 @@ endif()
 add_subdirectory(cimgui)
 
 include_directories(src)
-include_directories(cimgui)
+include_directories(cimgui cimgui/imgui cimgui/imgui/backends)
 include_directories(SYSTEM external ${SDL2_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIRS})
 
 add_executable(index
