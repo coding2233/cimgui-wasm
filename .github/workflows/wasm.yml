@@ -16,7 +16,7 @@ jobs:
       with:
         submodules: 'true'
 
-    - uses: check files
+    - name: check files
       run: |
         ls -alh
         ls -alh ./cimgui
