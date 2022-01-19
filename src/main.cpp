@@ -91,7 +91,8 @@ bool initSDL()
     );
     g_glcontext = SDL_GL_CreateContext(g_window);
     
-    ImGui_ImplSDL2_Init(g_window);
+    ImGui_ImplSDL2_InitForOpenGL(g_window,g_glcontext);
+    // ImGui_ImplOpenGL3_Init(glsl_version_);
     
     return true;
 }
