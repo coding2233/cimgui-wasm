@@ -4,6 +4,8 @@ project(cimgui-wasm)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra -Wno-missing-braces")
 
+add_definitions("-DIMGUI_DISABLE_OBSOLETE_FUNCTIONS")
+
 if(${EMSCRIPTEN})
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -s USE_SDL=2 -std=c++1z")
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/index.html DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
