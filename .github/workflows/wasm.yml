@@ -1,0 +1,35 @@
+name: Wasm CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'true'
+        
+    - name: setup emsdk
+      run: |
+        git clone https://github.com/emscripten-core/emsdk.git
+        cd emsdk
+        git pull
+        ./emsdk install latest
+        ./emsdk activate latest
+        source ./emsdk_env.sh
+        cd ..
+        
+    - name: build
+      run: |
+        mkdir build
+        cd build
+        /home/runner/work/imgui-wasm/imgui-wasm/emsdk/upstream/emscripten/emcmake cmake ..
+        make
+        ls -alh
