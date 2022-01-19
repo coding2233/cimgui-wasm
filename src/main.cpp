@@ -48,10 +48,10 @@ void main_loop()
         emscripten_run_script("window.location.href = 'https://github.com/schteppe/imgui-wasm';");
     }
 #endif
-    static glm::vec3 color(0.7f, 0.3f, 0.2f);
-    static glm::vec3 bgcolor(0.2f);
-    ImGui::ColorEdit3("Triangle", glm::value_ptr(color));
-    ImGui::ColorEdit3("Background", glm::value_ptr(bgcolor));
+    // static glm::vec3 color(0.7f, 0.3f, 0.2f);
+    // static glm::vec3 bgcolor(0.2f);
+    // ImGui::ColorEdit3("Triangle", glm::value_ptr(color));
+    // ImGui::ColorEdit3("Background", glm::value_ptr(bgcolor));
     ImGui::End();
 
     //static bool g_show_test_window = true;
