@@ -31,12 +31,12 @@ void main_loop()
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
-        ImGui_ImplSdl_ProcessEvent(&event);
+        ImGui_ImplSDL2_ProcessEvent(&event);
         if (event.type == SDL_QUIT)
             g_done = true;
     }
     
-    ImGui_ImplSdl_NewFrame(g_window);
+    ImGui_ImplSDL2_NewFrame(g_window);
     
     ImGui::SetNextWindowPos(ImVec2(10,10));
     ImGui::Begin("Demo", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
@@ -91,14 +91,14 @@ bool initSDL()
     );
     g_glcontext = SDL_GL_CreateContext(g_window);
     
-    ImGui_ImplSdl_Init(g_window);
+    ImGui_ImplSDL2_Init(g_window);
     
     return true;
 }
 
 void destroySDL()
 {
-    ImGui_ImplSdl_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
     SDL_GL_DeleteContext(g_glcontext);
     SDL_DestroyWindow(g_window);
     SDL_Quit();

@@ -21,6 +21,8 @@ include_directories(SYSTEM external ${SDL2_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIRS})
 
 add_executable(index
     src/main.cpp
+    src/cimgui/imgui/backends/imgui_impl_sdl.h
+    src/cimgui/imgui/backends/imgui_impl_sdl.cpp
 )
 
 source_group(external REGULAR_EXPRESSION external)
