@@ -40,3 +40,10 @@ jobs:
         $(pwd)/../emsdk/upstream/emscripten/emcmake cmake ..
         make
         ls -alh
+        cd ..
+    
+    - name: Expose as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: cimgui-wasm-build
+        path: build/

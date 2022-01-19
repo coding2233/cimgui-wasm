@@ -122,12 +122,6 @@ int main(int, char**)
     {
         return EXIT_FAILURE;
     }
-    
-    if(!initTriangle())
-    {
-        destroySDL();
-        return EXIT_FAILURE;
-    }
 
     runMainLoop();
         
