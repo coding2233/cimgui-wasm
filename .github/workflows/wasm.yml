@@ -2,9 +2,9 @@ name: Wasm CI
 
 on:
   push:
-    branches: [ master ]
+    branches: *
   pull_request:
-    branches: [ master ]
+    branches: *
 
 jobs:
   build:
@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: 'true'
-        
+
     - name: setup emsdk
       run: |
         git clone https://github.com/emscripten-core/emsdk.git
