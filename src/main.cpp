@@ -36,7 +36,7 @@ void main_loop()
             g_done = true;
     }
     
-    ImGui_ImplSDL2_NewFrame(g_window);
+    ImGui_ImplSDL2_NewFrame();
     
     ImGui::SetNextWindowPos(ImVec2(10,10));
     ImGui::Begin("Demo", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
