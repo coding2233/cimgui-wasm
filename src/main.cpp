@@ -68,7 +68,7 @@ void main_loop()
     glfwMakeContextCurrent(g_window);
     glfwGetFramebufferSize(g_window, &display_w, &display_h);
     glViewport(0, 0, display_w, display_h);
-    glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+    glClearColor(clear_color_.x, clear_color_.y, clear_color_.z, clear_color_.w);
     // glClear(GL_COLOR_BUFFER_BIT);
 
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
