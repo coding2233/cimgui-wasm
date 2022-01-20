@@ -1,5 +1,6 @@
 #include <imgui.h>
 #include "imgui_impl_sdl.h"
+#include "imgui_impl_opengl3.h"
 
 #include <SDL.h>
 #ifdef __APPLE__
@@ -36,8 +37,10 @@ void main_loop()
             g_done = true;
     }
     
+    ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame();
-    
+    ImGui::NewFrame();
+
     ImGui::SetNextWindowPos(ImVec2(10,10));
     ImGui::Begin("Demo", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
     ImGui::Text("Just a WebAssembly demo.");
@@ -57,12 +60,18 @@ void main_loop()
     //static bool g_show_test_window = true;
     //ImGui::ShowDemoWindow(&g_show_test_window);
     
-    int w, h;
-    SDL_GL_GetDrawableSize(g_window, &w, &h);
-    
-    glViewport(0, 0, w, h);
+
     ImGui::Render();
     
+    int display_w, display_h;
+    glfwMakeContextCurrent(g_window);
+    glfwGetFramebufferSize(g_window, &display_w, &display_h);
+    glViewport(0, 0, display_w, display_h);
+    glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
     SDL_GL_SwapWindow(g_window);
 }
 
@@ -92,7 +101,7 @@ bool initSDL()
     g_glcontext = SDL_GL_CreateContext(g_window);
     
     ImGui_ImplSDL2_InitForOpenGL(g_window,g_glcontext);
-    // ImGui_ImplOpenGL3_Init(glsl_version_);
+    ImGui_ImplOpenGL3_Init("#version 130");
     
     return true;
 }
