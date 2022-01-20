@@ -1,7 +1,12 @@
 #include <imgui.h>
 #include "imgui_impl_sdl.h"
-
+#include "imgui_impl_opengl3.h"
+#include <stdio.h>
 #include <SDL.h>
+#include <math.h>
+#include <iostream>
+#include <array>
+
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
 #include <OpenGL/glext.h>
@@ -21,10 +26,6 @@
 #include <emscripten.h>
 #include <GLES3/gl3.h>
 #endif
-
-#include <math.h>
-#include <iostream>
-#include <array>
 
 bool g_done = false;
    // Our state
