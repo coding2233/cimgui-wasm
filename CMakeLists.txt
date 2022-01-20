@@ -7,7 +7,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra -Wno-missing-bra
 if(${EMSCRIPTEN})
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 --preload-file data -s USE_SDL=2 -std=c++1z")
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/index.html DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data/fonts/wqy-microhei.ttc DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/data/fonts)
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data/wqy-microhei.ttc DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/data/)
 else()
     find_package(SDL2 REQUIRED)
     find_package(OpenGL REQUIRED)
