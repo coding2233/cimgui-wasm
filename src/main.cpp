@@ -3,20 +3,23 @@
 #include "imgui_impl_opengl3.h"
 
 #include <SDL.h>
-#ifdef __APPLE__
-#include <OpenGL/gl.h>
-#include <OpenGL/glext.h>
-#define glGenVertexArrays glGenVertexArraysAPPLE
-#define glBindVertexArrays glBindVertexArraysAPPLE
-#define glGenVertexArray glGenVertexArrayAPPLE
-#define glBindVertexArray glBindVertexArrayAPPLE
-#else
-#if defined(IMGUI_IMPL_OPENGL_ES2)
-#include <SDL_opengles2.h>
-#else
+// #ifdef __APPLE__
+// #include <OpenGL/gl.h>
+// #include <OpenGL/glext.h>
+// #define glGenVertexArrays glGenVertexArraysAPPLE
+// #define glBindVertexArrays glBindVertexArraysAPPLE
+// #define glGenVertexArray glGenVertexArrayAPPLE
+// #define glBindVertexArray glBindVertexArrayAPPLE
+// #else
+// #if defined(IMGUI_IMPL_OPENGL_ES2)
+// #include <SDL_opengles2.h>
+// #else
+// #include <SDL_opengl.h>
+// #endif
+// #endif
 #include <SDL_opengl.h>
-#endif
-#endif
+#define GLFW_INCLUDE_ES3
+#include <GLES3/gl3.h>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -97,21 +100,21 @@ void main_loop()
     // Update and Render additional Platform Windows
     // (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
     //  For this specific demo app we could also call SDL_GL_MakeCurrent(window, gl_context) directly)
-    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-    {
-        SDL_Window *backup_current_window = SDL_GL_GetCurrentWindow();
-        SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
-        ImGui::UpdatePlatformWindows();
-        ImGui::RenderPlatformWindowsDefault();
-        SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
-    }
+    // if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    // {
+    //     SDL_Window *backup_current_window = SDL_GL_GetCurrentWindow();
+    //     SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
+    //     ImGui::UpdatePlatformWindows();
+    //     ImGui::RenderPlatformWindowsDefault();
+    //     SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
+    // }
 
     SDL_GL_SwapWindow(g_window);
 }
 
 bool initSDL()
 {
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER ) != 0)
     {
         printf("Error: %s\n", SDL_GetError());
         return false;
@@ -141,12 +144,12 @@ bool initSDL()
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 #endif
 
-    // SDL_DisplayMode current;
-    // SDL_GetCurrentDisplayMode(0, &current);
     // Create window with graphics context
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+         SDL_DisplayMode current;
+    SDL_GetCurrentDisplayMode(0, &current);
     SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
     SDL_Window* window = SDL_CreateWindow("Dear ImGui SDL2+OpenGL3 example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
     g_glcontext = SDL_GL_CreateContext(window);
