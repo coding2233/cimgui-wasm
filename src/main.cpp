@@ -73,7 +73,7 @@ void main_loop()
     ImGui::NewFrame();
 
     //0. Custom window
-    ImGui::SetNextWindowPos(ImVec2(10,10));
+    // ImGui::SetNextWindowPos(ImVec2(10,10));
     ImGui::Begin("Custom Demo", nullptr);
     ImGui::Text("Just a WebAssembly demo.");
 #ifdef __EMSCRIPTEN__
@@ -83,7 +83,7 @@ void main_loop()
         emscripten_run_script("window.location.href = 'https://github.com/coding2233/cimgui-wasm';");
     }
 #endif
-    ImGui::Text("Chinese is not supported. [中文字体]");
+    ImGui::Text("Chinese support? [中文字体]");
     ImGui::End();
 
     // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
@@ -199,7 +199,7 @@ int main(int, char**)
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
     SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-    SDL_Window* window = SDL_CreateWindow("Dear ImGui SDL2+OpenGL3 example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
+    SDL_Window* window = SDL_CreateWindow("Dear ImGui SDL2+OpenGL3+WebAssembly webgl example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
     SDL_GLContext gl_context = SDL_GL_CreateContext(window);
     SDL_GL_MakeCurrent(window, gl_context);
     SDL_GL_SetSwapInterval(1); // Enable vsync
@@ -245,7 +245,7 @@ int main(int, char**)
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
-    // io.Fonts->AddFontFromFileTTF("data/wqy-microhei.ttc", 14.0f,NULL,io.Fonts->GetGlyphRangesChineseFull());
+    io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f,NULL,io.Fonts->GetGlyphRangesChineseFull());
     // io.Fonts->AddFontDefault();
 
     // resizeCanvas();
