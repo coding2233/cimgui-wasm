@@ -1,171 +1,287 @@
-#include <stdio.h>
+#include <imgui.h>
+#include "imgui_impl_sdl.h"
+
+#include <SDL.h>
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#include <OpenGL/glext.h>
+#define glGenVertexArrays glGenVertexArraysAPPLE
+#define glBindVertexArrays glBindVertexArraysAPPLE
+#define glGenVertexArray glGenVertexArrayAPPLE
+#define glBindVertexArray glBindVertexArrayAPPLE
+#else
+#include <SDL_opengles2.h>
+#endif
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
+#include <GLES3/gl3.h>
 #endif
 
-#define GLFW_INCLUDE_ES3
-#include <GLES3/gl3.h>
-#include <GLFW/glfw3.h>
-
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include <math.h>
 #include <iostream>
+#include <array>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
+uint32_t g_shaderProgram;
+int32_t g_attribLocationPosition;
+int32_t g_colorUniformLocation;
+uint32_t g_vbo, g_vao;
+std::array<float,9> g_vertices = {
+    -0.5f, -0.5f, 0.0f, // left
+    0.5f, -0.5f, 0.0f, // right
+    0.0f,  0.5f, 0.0f  // top
+};
+bool g_done = false;
+SDL_Window* g_window;
+SDL_GLContext g_glcontext;
 
-GLFWwindow* g_window;
-ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-ImGuiContext* imgui = 0;
-bool show_demo_window = true;
-bool show_another_window = false;
-
-EM_JS(int, canvas_get_width, (), {
-  return Module.canvas.width;
-});
-
-EM_JS(int, canvas_get_height, (), {
-  return Module.canvas.height;
-});
-
-EM_JS(void, resizeCanvas, (), {
-  js_resizeCanvas();
-});
-
-void loop()
+bool initTriangle()
 {
-  int width = canvas_get_width();
-  int height = canvas_get_height();
-
-  glfwSetWindowSize(g_window, width, height);
-
-  ImGui::SetCurrentContext(imgui);
-
-  glfwPollEvents();
-
-  ImGui_ImplOpenGL3_NewFrame();
-  ImGui_ImplGlfw_NewFrame();
-  ImGui::NewFrame();
-
-  // 1. Show a simple window.
-  // Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets automatically appears in a window called "Debug".
-  {
-      static float f = 0.0f;
-      static int counter = 0;
-      ImGui::Text("Hello, world!");                           // Display some text (you can use a format string too)
-      ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-      ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-      ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our windows open/close state
-      ImGui::Checkbox("Another Window", &show_another_window);
-
-      if (ImGui::Button("Button"))                            // Buttons return true when clicked (NB: most widgets return true when edited/activated)
-          counter++;
-      ImGui::SameLine();
-      ImGui::Text("counter = %d", counter);
-
-      ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-  }
-
-  //std::cout << "2nd window" << std::endl;
-
-  // 2. Show another simple window. In most cases you will use an explicit Begin/End pair to name your windows.
-  if (show_another_window)
-  {
-      ImGui::Begin("Another Window", &show_another_window);
-      ImGui::Text("Hello from another window!");
-      if (ImGui::Button("Close Me"))
-          show_another_window = false;
-      ImGui::End();
-  }
-
-  // 3. Show the ImGui demo window. Most of the sample code is in ImGui::ShowDemoWindow(). Read its code to learn more about Dear ImGui!
-  if (show_demo_window)
-  {
-      ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver); // Normally user code doesn't need/want to call this because positions are saved in .ini file anyway. Here we just want to make the demo initial state a bit more friendly!
-      ImGui::ShowDemoWindow(&show_demo_window);
-  }
-
-  ImGui::Render();
-
-  int display_w, display_h;
-  glfwMakeContextCurrent(g_window);
-  glfwGetFramebufferSize(g_window, &display_w, &display_h);
-  glViewport(0, 0, display_w, display_h);
-  glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-  glClear(GL_COLOR_BUFFER_BIT);
-
-  ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-  glfwMakeContextCurrent(g_window);
+    const char *vertexShaderSource = R"xxx(
+        attribute vec3 aPos;
+        void main()
+        {
+           gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+        }
+    )xxx";
+    
+    const char *fragmentShaderSource = R"xxx(
+        uniform vec4 color;
+        void main()
+        {
+           gl_FragColor = color;
+        }
+    )xxx";
+    
+    // build and compile our shader program
+    // ------------------------------------
+    // vertex shader
+    int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    {
+        std::string shaderSource = vertexShaderSource;
+    #ifdef __EMSCRIPTEN__
+        shaderSource = "precision mediump float;\n" + shaderSource; // required in webgl
+    #endif
+        const char* tmp = shaderSource.c_str();
+        glShaderSource(vertexShader, 1, &tmp, NULL);
+    }
+    glCompileShader(vertexShader);
+    // check for shader compile errors
+    int success;
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        char infoLog[512];
+        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+        return false;
+    }
+    
+    // fragment shader
+    int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    {
+        std::string shaderSource = fragmentShaderSource;
+#ifdef __EMSCRIPTEN__
+        shaderSource = "precision mediump float;\n" + shaderSource; // required in webgl
+#endif
+        const char* tmp = shaderSource.c_str();
+        glShaderSource(fragmentShader, 1, &tmp, NULL);
+    }
+    glCompileShader(fragmentShader);
+    // check for shader compile errors
+    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        char infoLog[512];
+        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+        return false;
+    }
+    // link shaders
+    g_shaderProgram = glCreateProgram();
+    glAttachShader(g_shaderProgram, vertexShader);
+    glAttachShader(g_shaderProgram, fragmentShader);
+    glLinkProgram(g_shaderProgram);
+    g_attribLocationPosition = glGetAttribLocation(g_shaderProgram, "aPos");
+    
+    // check for linking errors
+    glGetProgramiv(g_shaderProgram, GL_LINK_STATUS, &success);
+    if (!success) {
+        char infoLog[512];
+        glGetProgramInfoLog(g_shaderProgram, 512, NULL, infoLog);
+        std::cerr << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+        return false;
+    }
+    
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+    
+    g_colorUniformLocation = glGetUniformLocation(g_shaderProgram, "color");
+    if (g_colorUniformLocation == -1){
+        return false;
+    }
+    
+    glGenVertexArrays(1, &g_vao);
+    glGenBuffers(1, &g_vbo);
+    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+    glBindVertexArray(g_vao);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, g_vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * g_vertices.size(), g_vertices.data(), GL_DYNAMIC_DRAW);
+    
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    
+    // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    
+    // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
+    // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
+    glBindVertexArray(0);
+    
+    return true;
 }
 
-
-int init()
+void RenderTriangle(int x, int y, int width, int height, float time, glm::vec3 color, glm::vec3 bgcolor)
 {
-  if( !glfwInit() )
-  {
-      fprintf( stderr, "Failed to initialize GLFW\n" );
-      return 1;
-  }
+    glViewport(x, y, width, height);
+    glClearColor(bgcolor.x, bgcolor.y, bgcolor.z, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    
+    g_vertices[0] = sin(time);
+    g_vertices[1] = cos(time);
+    
+    g_vertices[3] = sin(time + 2.0f * M_PI / 3.0f);
+    g_vertices[4] = cos(time + 2.0f * M_PI / 3.0f);
+    
+    g_vertices[7] = cos(time + 4.0f * M_PI / 3.0f);
+    g_vertices[6] = sin(time + 4.0f * M_PI / 3.0f);
+    
+    
+    glBindVertexArray(g_vao);
+    glBindBuffer(GL_ARRAY_BUFFER, g_vbo);
+    glEnableVertexAttribArray(g_attribLocationPosition);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
-  //glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * g_vertices.size(), g_vertices.data(), GL_DYNAMIC_DRAW);
 
-  // Open a window and create its OpenGL context
-  int canvasWidth = 800;
-  int canvasHeight = 600;
-  g_window = glfwCreateWindow( canvasWidth, canvasHeight, "WebGui Demo", NULL, NULL);
-  if( g_window == NULL )
-  {
-      fprintf( stderr, "Failed to open GLFW window.\n" );
-      glfwTerminate();
-      return -1;
-  }
-  glfwMakeContextCurrent(g_window); // Initialize GLEW
-
-  // Create game objects
-  // Setup Dear ImGui binding
-  IMGUI_CHECKVERSION();
-  ImGui::CreateContext();
-  ImGuiIO& io = ImGui::GetIO();
-
-  ImGui_ImplGlfw_InitForOpenGL(g_window, false);
-  ImGui_ImplOpenGL3_Init();
-
-  // Setup style
-  ImGui::StyleColorsDark();
-  //ImGui::StyleColorsClassic();
-
-  // Load Fonts
-//   io.Fonts->AddFontFromFileTTF("data/xkcd-script.ttf", 23.0f);
-//   io.Fonts->AddFontFromFileTTF("data/xkcd-script.ttf", 18.0f);
-//   io.Fonts->AddFontFromFileTTF("data/xkcd-script.ttf", 26.0f);
-//   io.Fonts->AddFontFromFileTTF("data/xkcd-script.ttf", 32.0f);
-  io.Fonts->AddFontDefault();
-
-  imgui = ImGui::GetCurrentContext();
-
-  resizeCanvas();
-
-  return 0;
+    glUseProgram(g_shaderProgram);
+    glUniform4f(g_colorUniformLocation, color.x, color.y, color.z, 1.0f);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-
-void quit()
+void main_loop()
 {
-  glfwTerminate();
+    SDL_Event event;
+    while (SDL_PollEvent(&event))
+    {
+        ImGui_ImplSDL2_ProcessEvent(&event);
+        if (event.type == SDL_QUIT)
+            g_done = true;
+    }
+    
+    ImGui_ImplSDL2_NewFrame(g_window);
+    
+    ImGui::SetNextWindowPos(ImVec2(10,10));
+    ImGui::Begin("Demo", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::Text("Just a WebAssembly demo.");
+#ifdef __EMSCRIPTEN__
+    ImGui::SameLine();
+    if(ImGui::Button("View on Github"))
+    {
+        emscripten_run_script("window.location.href = 'https://github.com/schteppe/imgui-wasm';");
+    }
+#endif
+    static glm::vec3 color(0.7f, 0.3f, 0.2f);
+    static glm::vec3 bgcolor(0.2f);
+    ImGui::ColorEdit3("Triangle", glm::value_ptr(color));
+    ImGui::ColorEdit3("Background", glm::value_ptr(bgcolor));
+    ImGui::End();
+
+    //static bool g_show_test_window = true;
+    //ImGui::ShowDemoWindow(&g_show_test_window);
+    
+    int w, h;
+    SDL_GL_GetDrawableSize(g_window, &w, &h);
+    RenderTriangle(0, 0, w, h, SDL_GetTicks() / 1000.0f, color, bgcolor);
+    
+    glViewport(0, 0, w, h);
+    ImGui::Render();
+    
+    SDL_GL_SwapWindow(g_window);
 }
 
-
-extern "C" int main(int argc, char** argv)
+bool initSDL()
 {
-  if (init() != 0) return 1;
+    if (SDL_Init(SDL_INIT_VIDEO) != 0)
+    {
+        std::cerr << "Error: %s\n" << SDL_GetError() << '\n';
+        return false;
+    }
+    
+    // Setup window
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+    SDL_DisplayMode current;
+    SDL_GetCurrentDisplayMode(0, &current);
+    g_window = SDL_CreateWindow(
+        "ImGUI / WASM / WebGL demo", // title
+        SDL_WINDOWPOS_CENTERED, // x
+        SDL_WINDOWPOS_CENTERED, // y
+        1280, 720, // width, height
+        SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE|SDL_WINDOW_ALLOW_HIGHDPI // flags
+    );
+    g_glcontext = SDL_GL_CreateContext(g_window);
+    
+    ImGui_ImplSDL2_InitForOpenGL(g_window,g_glcontext);
+    
+    return true;
+}
 
-  #ifdef __EMSCRIPTEN__
-  emscripten_set_main_loop(loop, 0, 1);
-  #endif
+void destroySDL()
+{
+    ImGui_ImplSDL2_Shutdown();
+    SDL_GL_DeleteContext(g_glcontext);
+    SDL_DestroyWindow(g_window);
+    SDL_Quit();
+}
 
-  quit();
+void runMainLoop()
+{
+#ifdef __EMSCRIPTEN__
+    emscripten_set_main_loop(main_loop, 0, 1);
+#else
+    while (!g_done)
+    {
+        main_loop();
+    }
+#endif
+}
 
-  return 0;
+int main(int, char**)
+{
+    if(!initSDL())
+    {
+        return EXIT_FAILURE;
+    }
+    
+    if(!initTriangle())
+    {
+        destroySDL();
+        return EXIT_FAILURE;
+    }
+
+    runMainLoop();
+        
+    destroySDL();
+
+    return EXIT_SUCCESS;
 }
