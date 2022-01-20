@@ -58,8 +58,8 @@ void main_loop()
     // ImGui::ColorEdit3("Background", glm::value_ptr(bgcolor));
     ImGui::End();
 
-    //static bool g_show_test_window = true;
-    //ImGui::ShowDemoWindow(&g_show_test_window);
+    static bool g_show_test_window = true;
+    ImGui::ShowDemoWindow(&g_show_test_window);
     
 
     ImGui::Render();
@@ -109,13 +109,19 @@ bool initSDL()
         SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE|SDL_WINDOW_ALLOW_HIGHDPI // flags
     );
     g_glcontext = SDL_GL_CreateContext(g_window);
-    
-    clear_color_ = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    SDL_GL_MakeCurrent(g_window, g_glcontext);
+    SDL_GL_SetSwapInterval(1); // Enable vsync
 
+    // Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+
+    // ImGuiIO &io = ImGui::GetIO();
 
     ImGui_ImplSDL2_InitForOpenGL(g_window,g_glcontext);
     ImGui_ImplOpenGL3_Init("#version 130");
     
+    clear_color_ = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     return true;
 }
 
