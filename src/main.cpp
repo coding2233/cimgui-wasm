@@ -247,7 +247,7 @@ int main(int, char**)
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
     io.Fonts->AddFontFromFileTTF("data/fonts/wqy-microhei.ttc", 14.0f,NULL,io.Fonts->GetGlyphRangesChineseFull());
-    // io.Fonts->AddFontDefault();
+    io.Fonts->AddFontDefault();
 
     // resizeCanvas();
 
