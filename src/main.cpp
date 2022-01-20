@@ -10,7 +10,7 @@
 #define glGenVertexArray glGenVertexArrayAPPLE
 #define glBindVertexArray glBindVertexArrayAPPLE
 #else
-#include <SDL_opengles2.h>
+#include <SDL_opengles3.h>
 #endif
 
 #ifdef __EMSCRIPTEN__
