@@ -34,8 +34,24 @@ bool show_another_window = false;
 ImVec4 clear_color;
 SDL_Window* g_window; 
 
+EM_JS(int, canvas_get_width, (), {
+  return Module.canvas.width;
+});
+
+EM_JS(int, canvas_get_height, (), {
+  return Module.canvas.height;
+});
+
+EM_JS(void, resizeCanvas, (), {
+  js_resizeCanvas();
+});
+
 void main_loop()
 {
+    int width = canvas_get_width();
+    int height = canvas_get_height();
+    SDL_SetWindowSize(g_window, width, height);
+
     // Poll and handle events (inputs, window resize, etc.)
     // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
     // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application.
@@ -215,6 +231,9 @@ int main(int, char**)
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
+    io.Fonts->AddFontFromFileTTF("./fonts/wqy-microhei.ttc", 14.0f,NULL,io.Fonts->GetGlyphRangesChineseFull());
+
+    resizeCanvas();
 
     g_window=window;
     clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);

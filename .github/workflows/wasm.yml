@@ -55,5 +55,5 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        source: "build/index.html,build/index.js,build/index.wasm"
+        source: "build/index.html,build/index.js,build/index.wasm,build/fonts/wqy-microhei.ttc"
         target: "/usr/share/caddy/imgui"
