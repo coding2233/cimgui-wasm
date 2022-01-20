@@ -74,17 +74,16 @@ void main_loop()
 
     //0. Custom window
     ImGui::SetNextWindowPos(ImVec2(10,10));
-    ImGui::Begin("Custom Demo", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::Begin("Custom Demo", nullptr);
     ImGui::Text("Just a WebAssembly demo.");
 #ifdef __EMSCRIPTEN__
     ImGui::SameLine();
     if(ImGui::Button("View on Github"))
     {
-        emscripten_run_script("window.location.href = 'https://github.com/schteppe/imgui-wasm';");
+        emscripten_run_script("window.location.href = 'https://github.com/coding2233/cimgui-wasm';");
     }
 #endif
-    ImGui::Text("Just 支持中文的ImGui WebAssembly demo.");
-    ImGui::Text("Just a WebAssembly demo.");
+    ImGui::Text("Chinese is not supported. [中文字体]");
     ImGui::End();
 
     // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
@@ -246,7 +245,7 @@ int main(int, char**)
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
-    io.Fonts->AddFontFromFileTTF("data/wqy-microhei.ttc", 14.0f,NULL,io.Fonts->GetGlyphRangesChineseFull());
+    // io.Fonts->AddFontFromFileTTF("data/wqy-microhei.ttc", 14.0f,NULL,io.Fonts->GetGlyphRangesChineseFull());
     // io.Fonts->AddFontDefault();
 
     // resizeCanvas();

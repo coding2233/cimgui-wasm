@@ -42,11 +42,11 @@ jobs:
         ls -alh
         cd ..
     
-    - name: Expose as artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: cimgui-wasm-build
-        path: build/
+    # - name: Expose as artifact
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: cimgui-wasm-build
+    #     path: build/
     
     - name: copy file via ssh password
       uses: appleboy/scp-action@master
@@ -55,5 +55,5 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        source: "build/index.html,build/index.js,build/index.wasm,build/index.data"
+        source: "build/index.html,build/index.js,build/index.wasm" #build/index.data
         target: "/usr/share/caddy/imgui"
