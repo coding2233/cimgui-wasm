@@ -27,9 +27,29 @@ bool g_done = false;
 SDL_Window* g_window;
 SDL_GLContext g_glcontext;
 ImVec4 clear_color_;
+ImGuiContext* imgui_ = 0;
+
+EM_JS(int, canvas_get_width, (), {
+  return Module.canvas.width;
+});
+
+EM_JS(int, canvas_get_height, (), {
+  return Module.canvas.height;
+});
+
+EM_JS(void, resizeCanvas, (), {
+  js_resizeCanvas();
+});
 
 void main_loop()
 {
+    int width = canvas_get_width();
+    int height = canvas_get_height();
+
+    SDL_SetWindowSize(g_window,width,height);
+
+    ImGui::SetCurrentContext(imgui_);
+
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
@@ -87,10 +107,10 @@ void main_loop()
 
 bool initSDL()
 {
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
     {
-        std::cerr << "Error: %s\n" << SDL_GetError() << '\n';
-        return false;
+        printf("Error: %s\n", SDL_GetError());
+        return;
     }
     
     // Setup window
@@ -99,8 +119,8 @@ bool initSDL()
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
-    SDL_DisplayMode current;
-    SDL_GetCurrentDisplayMode(0, &current);
+    // SDL_DisplayMode current;
+    // SDL_GetCurrentDisplayMode(0, &current);
     g_window = SDL_CreateWindow(
         "ImGUI / WASM / WebGL demo", // title
         SDL_WINDOWPOS_CENTERED, // x
@@ -112,16 +132,21 @@ bool initSDL()
     SDL_GL_MakeCurrent(g_window, g_glcontext);
     SDL_GL_SetSwapInterval(1); // Enable vsync
 
+
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-
-    // ImGuiIO &io = ImGui::GetIO();
+    ImGuiIO &io = ImGui::GetIO();
 
     ImGui_ImplSDL2_InitForOpenGL(g_window,g_glcontext);
     ImGui_ImplOpenGL3_Init("#version 130");
     
     clear_color_ = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+    imgui_= ImGui::GetCurrentContext();
+
+    resizeCanvas();
+
     return true;
 }
 
