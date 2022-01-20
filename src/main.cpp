@@ -1,40 +1,24 @@
-#include <imgui.h>
-#include "imgui_impl_sdl.h"
-#include "imgui_impl_opengl3.h"
-
-#include <SDL.h>
-// #ifdef __APPLE__
-// #include <OpenGL/gl.h>
-// #include <OpenGL/glext.h>
-// #define glGenVertexArrays glGenVertexArraysAPPLE
-// #define glBindVertexArrays glBindVertexArraysAPPLE
-// #define glGenVertexArray glGenVertexArrayAPPLE
-// #define glBindVertexArray glBindVertexArrayAPPLE
-// #else
-// #if defined(IMGUI_IMPL_OPENGL_ES2)
-// #include <SDL_opengles2.h>
-// #else
-// #include <SDL_opengl.h>
-// #endif
-// #endif
-#include <SDL_opengl.h>
-#define GLFW_INCLUDE_ES3
-#include <GLES3/gl3.h>
+#include <stdio.h>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
-#include <GLES3/gl3.h>
 #endif
 
-#include <math.h>
-#include <iostream>
-#include <array>
+#define GLFW_INCLUDE_ES3
+#include <GLES3/gl3.h>
+#include <GLFW/glfw3.h>
 
-bool g_done = false;
-SDL_Window* g_window;
-SDL_GLContext g_glcontext;
-ImVec4 clear_color_;
-ImGuiContext* imgui_ = 0;
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+#include <iostream>
+
+
+GLFWwindow* g_window;
+ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+ImGuiContext* imgui = 0;
+bool show_demo_window = true;
+bool show_another_window = false;
 
 EM_JS(int, canvas_get_width, (), {
   return Module.canvas.width;
@@ -48,168 +32,140 @@ EM_JS(void, resizeCanvas, (), {
   js_resizeCanvas();
 });
 
-void main_loop()
+void loop()
 {
-    int width = canvas_get_width();
-    int height = canvas_get_height();
+  int width = canvas_get_width();
+  int height = canvas_get_height();
 
-    SDL_SetWindowSize(g_window,width,height);
+  glfwSetWindowSize(g_window, width, height);
 
-    ImGui::SetCurrentContext(imgui_);
+  ImGui::SetCurrentContext(imgui);
 
-    SDL_Event event;
-    while (SDL_PollEvent(&event))
-    {
-        ImGui_ImplSDL2_ProcessEvent(&event);
-        if (event.type == SDL_QUIT)
-            g_done = true;
-    }
-    
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplSDL2_NewFrame();
-    ImGui::NewFrame();
+  glfwPollEvents();
 
-    ImGui::SetNextWindowPos(ImVec2(10,10));
-    ImGui::Begin("Demo", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-    ImGui::Text("Just a WebAssembly demo.");
-#ifdef __EMSCRIPTEN__
-    ImGui::SameLine();
-    if(ImGui::Button("View on Github"))
-    {
-        emscripten_run_script("window.location.href = 'https://github.com/schteppe/imgui-wasm';");
-    }
-#endif
-    // static glm::vec3 color(0.7f, 0.3f, 0.2f);
-    // static glm::vec3 bgcolor(0.2f);
-    // ImGui::ColorEdit3("Triangle", glm::value_ptr(color));
-    // ImGui::ColorEdit3("Background", glm::value_ptr(bgcolor));
-    ImGui::End();
+  ImGui_ImplOpenGL3_NewFrame();
+  ImGui_ImplGlfw_NewFrame();
+  ImGui::NewFrame();
 
-    static bool g_show_test_window = true;
-    ImGui::ShowDemoWindow(&g_show_test_window);
-    
+  // 1. Show a simple window.
+  // Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets automatically appears in a window called "Debug".
+  {
+      static float f = 0.0f;
+      static int counter = 0;
+      ImGui::Text("Hello, world!");                           // Display some text (you can use a format string too)
+      ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+      ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
 
-    ImGui::Render();
-    
-    ImGuiIO &io = ImGui::GetIO();
-    glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-    glClearColor(clear_color_.x, clear_color_.y, clear_color_.z, clear_color_.w);
-    glClear(GL_COLOR_BUFFER_BIT);
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+      ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our windows open/close state
+      ImGui::Checkbox("Another Window", &show_another_window);
 
-    // Update and Render additional Platform Windows
-    // (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
-    //  For this specific demo app we could also call SDL_GL_MakeCurrent(window, gl_context) directly)
-    // if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-    // {
-    //     SDL_Window *backup_current_window = SDL_GL_GetCurrentWindow();
-    //     SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
-    //     ImGui::UpdatePlatformWindows();
-    //     ImGui::RenderPlatformWindowsDefault();
-    //     SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
-    // }
+      if (ImGui::Button("Button"))                            // Buttons return true when clicked (NB: most widgets return true when edited/activated)
+          counter++;
+      ImGui::SameLine();
+      ImGui::Text("counter = %d", counter);
 
-    SDL_GL_SwapWindow(g_window);
+      ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+  }
+
+  //std::cout << "2nd window" << std::endl;
+
+  // 2. Show another simple window. In most cases you will use an explicit Begin/End pair to name your windows.
+  if (show_another_window)
+  {
+      ImGui::Begin("Another Window", &show_another_window);
+      ImGui::Text("Hello from another window!");
+      if (ImGui::Button("Close Me"))
+          show_another_window = false;
+      ImGui::End();
+  }
+
+  // 3. Show the ImGui demo window. Most of the sample code is in ImGui::ShowDemoWindow(). Read its code to learn more about Dear ImGui!
+  if (show_demo_window)
+  {
+      ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver); // Normally user code doesn't need/want to call this because positions are saved in .ini file anyway. Here we just want to make the demo initial state a bit more friendly!
+      ImGui::ShowDemoWindow(&show_demo_window);
+  }
+
+  ImGui::Render();
+
+  int display_w, display_h;
+  glfwMakeContextCurrent(g_window);
+  glfwGetFramebufferSize(g_window, &display_w, &display_h);
+  glViewport(0, 0, display_w, display_h);
+  glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+  glClear(GL_COLOR_BUFFER_BIT);
+
+  ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+  glfwMakeContextCurrent(g_window);
 }
 
-bool initSDL()
+
+int init()
 {
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER ) != 0)
-    {
-        printf("Error: %s\n", SDL_GetError());
-        return false;
-    }
-    
-    // Decide GL+GLSL versions
-#if defined(IMGUI_IMPL_OPENGL_ES2)
-    // GL ES 2.0 + GLSL 100
-    const char* glsl_version = "#version 100";
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-#elif defined(__APPLE__)
-    // GL 3.2 Core + GLSL 150
-    const char* glsl_version = "#version 150";
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG); // Always required on Mac
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
-#else
-    // GL 3.0 + GLSL 130
-    const char* glsl_version = "#version 130";
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-#endif
+  if( !glfwInit() )
+  {
+      fprintf( stderr, "Failed to initialize GLFW\n" );
+      return 1;
+  }
 
-    // Create window with graphics context
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-         SDL_DisplayMode current;
-    SDL_GetCurrentDisplayMode(0, &current);
-    SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-    SDL_Window* window = SDL_CreateWindow("Dear ImGui SDL2+OpenGL3 example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
-    g_glcontext = SDL_GL_CreateContext(window);
-    SDL_GL_MakeCurrent(window, g_glcontext);
-    SDL_GL_SetSwapInterval(1); // Enable vsync
+  //glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL
 
-    // Setup Dear ImGui context
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO &io = ImGui::GetIO();
-    // (void)io;
+  // Open a window and create its OpenGL context
+  int canvasWidth = 800;
+  int canvasHeight = 600;
+  g_window = glfwCreateWindow( canvasWidth, canvasHeight, "WebGui Demo", NULL, NULL);
+  if( g_window == NULL )
+  {
+      fprintf( stderr, "Failed to open GLFW window.\n" );
+      glfwTerminate();
+      return -1;
+  }
+  glfwMakeContextCurrent(g_window); // Initialize GLEW
 
-    ImGui_ImplSDL2_InitForOpenGL(g_window,g_glcontext);
-    ImGui_ImplOpenGL3_Init(glsl_version);
-    
-    io.Fonts->AddFontDefault();
+  // Create game objects
+  // Setup Dear ImGui binding
+  IMGUI_CHECKVERSION();
+  ImGui::CreateContext();
+  ImGuiIO& io = ImGui::GetIO();
 
-    clear_color_ = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+  ImGui_ImplGlfw_InitForOpenGL(g_window, false);
+  ImGui_ImplOpenGL3_Init();
 
-    imgui_= ImGui::GetCurrentContext();
+  // Setup style
+  ImGui::StyleColorsDark();
+  //ImGui::StyleColorsClassic();
 
-    resizeCanvas();
+  // Load Fonts
+//   io.Fonts->AddFontFromFileTTF("data/xkcd-script.ttf", 23.0f);
+//   io.Fonts->AddFontFromFileTTF("data/xkcd-script.ttf", 18.0f);
+//   io.Fonts->AddFontFromFileTTF("data/xkcd-script.ttf", 26.0f);
+//   io.Fonts->AddFontFromFileTTF("data/xkcd-script.ttf", 32.0f);
+  io.Fonts->AddFontDefault();
 
-    return true;
+  imgui = ImGui::GetCurrentContext();
+
+  resizeCanvas();
+
+  return 0;
 }
 
-void destroySDL()
-{
-   // Cleanup
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplSDL2_Shutdown();
-    ImGui::DestroyContext();
 
-    SDL_GL_DeleteContext(g_glcontext);
-    SDL_DestroyWindow(g_window);
-    SDL_Quit();
+void quit()
+{
+  glfwTerminate();
 }
 
-void runMainLoop()
+
+extern "C" int main(int argc, char** argv)
 {
-#ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop(main_loop, 0, 1);
-#else
-    while (!g_done)
-    {
-        main_loop();
-    }
-#endif
-}
+  if (init() != 0) return 1;
 
-int main(int, char**)
-{
-    if(!initSDL())
-    {
-        return EXIT_FAILURE;
-    }
+  #ifdef __EMSCRIPTEN__
+  emscripten_set_main_loop(loop, 0, 1);
+  #endif
 
-    runMainLoop();
-        
-    destroySDL();
+  quit();
 
-    return EXIT_SUCCESS;
+  return 0;
 }
