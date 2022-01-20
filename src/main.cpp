@@ -245,13 +245,8 @@ int main(int, char**)
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
-    io.Fonts->AddFontDefault();
-    auto chineseFont= io.Fonts->AddFontFromFileTTF("/fonts/WenQuanYiMicroHei.ttf", 14.0f,NULL,io.Fonts->GetGlyphRangesChineseFull());
-    // if (chineseFont == NULL)
-    // {
-    //     auto defaultFont = io.Fonts->AddFontDefault();
-    //     ImGui::PushFont(defaultFont);
-    // }
+    // io.Fonts->AddFontDefault();
+    // io.Fonts->AddFontFromFileTTF("/fonts/WenQuanYiMicroHei.ttf", 14.0f,NULL,io.Fonts->GetGlyphRangesChineseFull());
     
     // resizeCanvas();
 
