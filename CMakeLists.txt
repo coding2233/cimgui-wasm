@@ -22,8 +22,8 @@ add_executable(index
     src/main.cpp
     cimgui/imgui/backends/imgui_impl_sdl.h
     cimgui/imgui/backends/imgui_impl_sdl.cpp
-    cimgui/imgui/backends/imgui_impl_opengl3.h
-    cimgui/imgui/backends/imgui_impl_opengl3.cpp
+    # cimgui/imgui/backends/imgui_impl_opengl3.h
+    # cimgui/imgui/backends/imgui_impl_opengl3.cpp
 )
 
 source_group(external REGULAR_EXPRESSION external)
