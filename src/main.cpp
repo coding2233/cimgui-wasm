@@ -72,6 +72,21 @@ void main_loop()
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
 
+    //0. Custom window
+    ImGui::SetNextWindowPos(ImVec2(10,10));
+    ImGui::Begin("Custom Demo", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::Text("Just a WebAssembly demo.");
+#ifdef __EMSCRIPTEN__
+    ImGui::SameLine();
+    if(ImGui::Button("View on Github"))
+    {
+        emscripten_run_script("window.location.href = 'https://github.com/schteppe/imgui-wasm';");
+    }
+#endif
+    ImGui::Text("Just 支持中文的ImGui WebAssembly demo.");
+    ImGui::Text("Just a WebAssembly demo.");
+    ImGui::End();
+
     // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
     if (show_demo_window)
         ImGui::ShowDemoWindow(&show_demo_window);
@@ -231,7 +246,7 @@ int main(int, char**)
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
-    // io.Fonts->AddFontFromFileTTF("./fonts/wqy-microhei.ttc", 14.0f,NULL,io.Fonts->GetGlyphRangesChineseFull());
+    io.Fonts->AddFontFromFileTTF("./data/fonts/wqy-microhei.ttc", 14.0f,NULL,io.Fonts->GetGlyphRangesChineseFull());
     // io.Fonts->AddFontDefault();
 
     resizeCanvas();
