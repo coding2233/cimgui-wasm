@@ -26,6 +26,7 @@
 bool g_done = false;
 SDL_Window* g_window;
 SDL_GLContext g_glcontext;
+ImVec4 clear_color_;
 
 void main_loop()
 {
@@ -68,7 +69,7 @@ void main_loop()
     glfwGetFramebufferSize(g_window, &display_w, &display_h);
     glViewport(0, 0, display_w, display_h);
     glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-    glClear(GL_COLOR_BUFFER_BIT);
+    // glClear(GL_COLOR_BUFFER_BIT);
 
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -100,6 +101,9 @@ bool initSDL()
     );
     g_glcontext = SDL_GL_CreateContext(g_window);
     
+    clear_color_ = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+
     ImGui_ImplSDL2_InitForOpenGL(g_window,g_glcontext);
     ImGui_ImplOpenGL3_Init("#version 130");
     
