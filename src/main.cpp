@@ -48,9 +48,9 @@ EM_JS(void, resizeCanvas, (), {
 
 void main_loop()
 {
-    int width = canvas_get_width();
-    int height = canvas_get_height();
-    SDL_SetWindowSize(g_window, width, height);
+    // int width = canvas_get_width();
+    // int height = canvas_get_height();
+    // SDL_SetWindowSize(g_window, width, height);
 
     // Poll and handle events (inputs, window resize, etc.)
     // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
@@ -249,7 +249,7 @@ int main(int, char**)
     io.Fonts->AddFontFromFileTTF("data/fonts/wqy-microhei.ttc", 14.0f,NULL,io.Fonts->GetGlyphRangesChineseFull());
     // io.Fonts->AddFontDefault();
 
-    resizeCanvas();
+    // resizeCanvas();
 
     g_window=window;
     clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
