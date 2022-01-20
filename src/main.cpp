@@ -156,7 +156,7 @@ bool initSDL()
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    // ImGuiIO &io = ImGui::GetIO();
+    ImGuiIO &io = ImGui::GetIO();
     // (void)io;
 
     ImGui_ImplSDL2_InitForOpenGL(g_window,g_glcontext);
