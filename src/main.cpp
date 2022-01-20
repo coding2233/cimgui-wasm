@@ -30,7 +30,7 @@ bool g_done = false;
    // Our state
 bool show_demo_window = true;
 bool show_another_window = false;
-ImVec4 clear_color ;
+ImVec4 clear_color;
 SDL_Window* g_window; 
 
 void main_loop()
@@ -46,7 +46,7 @@ void main_loop()
         ImGui_ImplSDL2_ProcessEvent(&event);
         if (event.type == SDL_QUIT)
             g_done = true;
-        if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window))
+        if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(g_window))
             g_done = true;
     }
 
@@ -215,7 +215,7 @@ int main(int, char**)
     //IM_ASSERT(font != NULL);
 
     g_window=window;
-    clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f)
+    clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     // Main loop
     g_done = false;
     runMainLoop();
