@@ -271,7 +271,7 @@ int main(int, char**)
     //IM_ASSERT(font != NULL);
     // io.Fonts->AddFontDefault();
     // io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f);
-   io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f,NULL,io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
+   io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f,NULL,io.Fonts->GetGlyphRangesChineseFull());
     // resizeCanvas();
 
     g_window=window;
