@@ -89,7 +89,6 @@ void main_loop()
     }
 #endif
     ImGui::Text("Chinese support? [中文字体]");
-    ImGui::Text(ImGui::GetIO().Fonts->GetGlyphRangesChineseFull());
     // // open Dialog Simple
     // if (ImGui::Button("Open File Dialog"))
     //     ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".*", "data");
@@ -272,13 +271,14 @@ int main(int, char**)
     //IM_ASSERT(font != NULL);
     // io.Fonts->AddFontDefault();
     // // io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f);
-    // ImFontConfig imfont_config;//= IM_NEW(ImFontConfig)();
-    // imfont_config.OversampleH=1;
-    // imfont_config.OversampleV=1;
-    // imfont_config.RasterizerMultiply=1;
-    // imfont_config.MergeMode=true;
-    // imfont_config.PixelSnapH=true;
-    io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f);
+    static ImFontConfig imfont_config;//= IM_NEW(ImFontConfig)();
+    imfont_config.OversampleH=1;
+    imfont_config.OversampleV=1;
+    imfont_config.RasterizerMultiply=1;
+    imfont_config.MergeMode=true;
+    imfont_config.PixelSnapH=true;
+    io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f,&imfont_config,io.Fonts->GetGlyphRangesDefault());
+    io.Fonts->Build();
     // resizeCanvas();
 
     g_window=window;
