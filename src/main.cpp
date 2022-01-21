@@ -88,7 +88,7 @@ void main_loop()
     ImGui::Text("Chinese support? [中文字体]");
     // open Dialog Simple
     if (ImGui::Button("Open File Dialog"))
-        ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".*", ".");
+        ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".*", "data");
 
     // display
     if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey")) 
