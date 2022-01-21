@@ -277,7 +277,7 @@ int main(int, char**)
     // imfont_config.RasterizerMultiply=1;
     // imfont_config.MergeMode=true;
     // imfont_config.PixelSnapH=true;
-    io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f,0,io.Fonts->GetGlyphRangesChineseFull());
+    io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f);
     // resizeCanvas();
 
     g_window=window;
