@@ -86,24 +86,24 @@ void main_loop()
     }
 #endif
     ImGui::Text("Chinese support? [中文字体]");
-    // open Dialog Simple
-    if (ImGui::Button("Open File Dialog"))
-        ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".*", "data");
+    // // open Dialog Simple
+    // if (ImGui::Button("Open File Dialog"))
+    //     ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".*", "data");
 
-    // display
-    if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey")) 
-    {
-        // action if OK
-        if (ImGuiFileDialog::Instance()->IsOk())
-        {
-        std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
-        std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
-        // action
-        }
+    // // display
+    // if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey")) 
+    // {
+    //     // action if OK
+    //     if (ImGuiFileDialog::Instance()->IsOk())
+    //     {
+    //     std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
+    //     std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
+    //     // action
+    //     }
         
-        // close
-        ImGuiFileDialog::Instance()->Close();
-    }
+    //     // close
+    //     ImGuiFileDialog::Instance()->Close();
+    // }
     
     ImGui::End();
 
@@ -267,7 +267,7 @@ int main(int, char**)
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
     // io.Fonts->AddFontDefault();
-    // io.Fonts->AddFontFromFileTTF("/fonts/WenQuanYiMicroHei.ttf", 14.0f,NULL,io.Fonts->GetGlyphRangesChineseFull());
+    io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f);
     
     // resizeCanvas();
 
