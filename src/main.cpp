@@ -89,7 +89,7 @@ void main_loop()
     }
 #endif
     ImGui::Text("Chinese support? [中文字体]");
-    ImGui::Text(ImGui::GetIO().Fonts->GetGlyphRangesChineseFull())
+    ImGui::Text(ImGui::GetIO().Fonts->GetGlyphRangesChineseFull());
     // // open Dialog Simple
     // if (ImGui::Button("Open File Dialog"))
     //     ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".*", "data");
