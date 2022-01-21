@@ -271,12 +271,7 @@ int main(int, char**)
     //IM_ASSERT(font != NULL);
     // io.Fonts->AddFontDefault();
     // io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f);
-    FILE* fp = fopen("data/fonts/WenQuanYiMicroHei.ttf", "r");
-	if (fp) {
-        io.Fonts->AddFontFromMemoryTTF(fp,14.0f,14.0f,NULL,io.Fonts->GetGlyphRangesChineseFull());
-		fclose(fp);
-	}
-    // io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f,NULL,io.Fonts->GetGlyphRangesDefault());
+   io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f,NULL,io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
     // resizeCanvas();
 
     g_window=window;
