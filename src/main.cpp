@@ -27,6 +27,8 @@
 #include <GLES3/gl3.h>
 #endif
 
+#include "libs/ImGuiFileDialog/ImGuiFileDialog.h"
+
 bool g_done = false;
    // Our state
 bool show_demo_window = true;
@@ -84,6 +86,25 @@ void main_loop()
     }
 #endif
     ImGui::Text("Chinese support? [中文字体]");
+    // open Dialog Simple
+    if (ImGui::Button("Open File Dialog"))
+        ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".*", ".");
+
+    // display
+    if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey")) 
+    {
+        // action if OK
+        if (ImGuiFileDialog::Instance()->IsOk())
+        {
+        std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
+        std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
+        // action
+        }
+        
+        // close
+        ImGuiFileDialog::Instance()->Close();
+    }
+    
     ImGui::End();
 
     // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
