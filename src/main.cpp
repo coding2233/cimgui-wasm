@@ -270,9 +270,13 @@ int main(int, char**)
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
     // io.Fonts->AddFontDefault();
-    // // io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f);
-
-    io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f,NULL,io.Fonts->GetGlyphRangesDefault());
+    // io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f);
+    FILE* fp = fopen("data/fonts/WenQuanYiMicroHei.ttf", "r");
+	if (fp) {
+        io.Fonts->AddFontFromMemoryTTF(fp,14.0f,14.0f,NULL,io.Fonts->GetGlyphRangesChineseFull());
+		fclose(fp);
+	}
+    // io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f,NULL,io.Fonts->GetGlyphRangesDefault());
     // resizeCanvas();
 
     g_window=window;
