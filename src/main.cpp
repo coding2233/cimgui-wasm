@@ -268,7 +268,7 @@ int main(int, char**)
     //IM_ASSERT(font != NULL);
     // io.Fonts->AddFontDefault();
     io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f);
-    ImFontConfig *imfont_config= ImFontConfig_ImFontConfig();
+    ImFontConfig *imfont_config= IM_NEW(ImFontConfig)();
     imfont_config->OversampleH=1;
     imfont_config->OversampleV=1;
     imfont_config->RasterizerMultiply=1;
