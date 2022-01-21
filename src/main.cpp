@@ -268,7 +268,14 @@ int main(int, char**)
     //IM_ASSERT(font != NULL);
     // io.Fonts->AddFontDefault();
     io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f);
-    
+    ImFontConfig *imfont_config= ImFontConfig_ImFontConfig();
+    imfont_config->OversampleH=1;
+    imfont_config->OversampleV=1;
+    imfont_config->RasterizerMultiply=1;
+    imfont_config->MergeMode=true;
+    imfont_config->PixelSnapH=true;
+    io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f,imfont_config,io.Fonts->GetGlyphRangesChineseFull());
+    io.Fonts->Build();
     // resizeCanvas();
 
     g_window=window;
