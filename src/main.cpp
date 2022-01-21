@@ -88,7 +88,8 @@ void main_loop()
         emscripten_run_script("window.location.href = 'https://github.com/coding2233/cimgui-wasm';");
     }
 #endif
-    // ImGui::Text("Chinese support? [中文字体]");
+    ImGui::Text("Chinese support? [中文字体]");
+    ImGui::Text(ImGui::GetIO().Fonts->GetGlyphRangesChineseFull())
     // // open Dialog Simple
     // if (ImGui::Button("Open File Dialog"))
     //     ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".*", "data");
