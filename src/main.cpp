@@ -1,3 +1,6 @@
+//https://www.cntofu.com/book/150/readme.html
+//https://emscripten.org/docs
+
 #include <imgui.h>
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
@@ -85,7 +88,7 @@ void main_loop()
         emscripten_run_script("window.location.href = 'https://github.com/coding2233/cimgui-wasm';");
     }
 #endif
-    ImGui::Text("Chinese support? [中文字体]");
+    ImGui::Text(u"Chinese support? [中文字体]");
     // // open Dialog Simple
     // if (ImGui::Button("Open File Dialog"))
     //     ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".*", "data");
@@ -266,7 +269,7 @@ int main(int, char**)
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
-    // io.Fonts->AddFontDefault();
+    io.Fonts->AddFontDefault();
     // io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f);
     ImFontConfig imfont_config;//= IM_NEW(ImFontConfig)();
     imfont_config.OversampleH=1;
