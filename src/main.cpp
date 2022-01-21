@@ -271,14 +271,8 @@ int main(int, char**)
     //IM_ASSERT(font != NULL);
     // io.Fonts->AddFontDefault();
     // // io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f);
-    static ImFontConfig imfont_config;//= IM_NEW(ImFontConfig)();
-    imfont_config.OversampleH=1;
-    imfont_config.OversampleV=1;
-    imfont_config.RasterizerMultiply=1;
-    imfont_config.MergeMode=true;
-    imfont_config.PixelSnapH=true;
-    io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f,&imfont_config,io.Fonts->GetGlyphRangesDefault());
-    io.Fonts->Build();
+
+    io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f,NULL,io.Fonts->GetGlyphRangesDefault());
     // resizeCanvas();
 
     g_window=window;
