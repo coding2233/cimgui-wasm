@@ -32,7 +32,21 @@ jobs:
         ./emsdk activate latest
         source ./emsdk_env.sh
         cd ..
-        
+
+    - name: lua jit
+      run: |
+        cd LuaJIT-2.0.5/src
+        make && make install
+        cd ../../
+    
+    - name: cimgui generator
+      run: |
+        cd cimgui/generator
+        luajit ./generator.lua gcc "internal" opengl3 sdl
+        ls -alh ./
+        ls -alh ./output
+        cd ../../
+
     - name: build
       run: |
         mkdir build
