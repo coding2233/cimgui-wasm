@@ -35,7 +35,9 @@ jobs:
 
     - name: lua jit
       run: |
+        apt-get -y install gcc
         cd LuaJIT-2.0.5/src
+        ls -lah
         make && make install
         cd ../../
     
