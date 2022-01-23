@@ -22,17 +22,7 @@ jobs:
         ls -alh
         ls -alh ./cimgui
         ls -alh ./cimgui/imgui
-
-    - name: setup emsdk
-      run: |
-        git clone https://github.com/emscripten-core/emsdk.git
-        cd emsdk
-        git pull
-        ./emsdk install latest
-        ./emsdk activate latest
-        source ./emsdk_env.sh
-        cd ..
-
+  
     - name: lua jit
       run: |
         sudo apt update
@@ -49,6 +39,16 @@ jobs:
         ls -alh ./
         ls -alh ./output
         cd ../../
+
+    - name: setup emsdk
+      run: |
+        git clone https://github.com/emscripten-core/emsdk.git
+        cd emsdk
+        git pull
+        ./emsdk install latest
+        ./emsdk activate latest
+        source ./emsdk_env.sh
+        cd ..
 
     - name: build
       run: |
