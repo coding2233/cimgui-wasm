@@ -35,7 +35,7 @@ jobs:
     - name: cimgui generator
       run: |
         cd cimgui/generator
-        sudo $(pwd)../../LuaJIT-2.0.5/src/luajit ./generator.lua gcc "internal" opengl3 sdl
+        sudo $(pwd)/../../LuaJIT-2.0.5/src/luajit ./generator.lua gcc "internal" opengl3 sdl
         ls -alh ./
         ls -alh ./output
         cd ../../
