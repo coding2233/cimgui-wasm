@@ -26,6 +26,8 @@ file(GLOB_RECURSE LUAJIT_SRC
     "LuaJIT-2.0.5/src/*.hpp"
 )
 
+add_definitions("-DLJ_TARGET_X86ORX64")
+
 add_executable(index
     src/main.cpp
     cimgui/imgui/backends/imgui_impl_sdl.h

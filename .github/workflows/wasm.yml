@@ -23,14 +23,14 @@ jobs:
         ls -alh ./cimgui
         ls -alh ./cimgui/imgui
   
-    # - name: lua jit
-    #   run: |
-    #     sudo apt update
-    #     sudo apt -y install gcc
-    #     cd LuaJIT-2.0.5/src
-    #     ls -lah
-    #     make
-    #     cd ../../
+    - name: lua jit
+      run: |
+        sudo apt update
+        sudo apt -y install gcc
+        cd LuaJIT-2.0.5/src
+        ls -lah
+        make
+        cd ../../
     
     # - name: cimgui generator
     #   run: |
