@@ -18,17 +18,6 @@ add_subdirectory(cimgui)
 include_directories(src)
 include_directories(cimgui cimgui/imgui cimgui/imgui/backends)
 include_directories(SYSTEM external ${SDL2_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIRS})
-include_directories(LuaJIT-2.0.5/src)
-
-#!GLOB_RECURSE
-file(LUAJIT_SRC
-    "LuaJIT-2.0.5/src/*.h"
-    "LuaJIT-2.0.5/src/*.c"
-    "LuaJIT-2.0.5/src/*.hpp"
-)
-
-
-add_definitions("-DLJ_TARGET_X86ORX64")
 
 add_executable(index
     src/main.cpp
@@ -36,7 +25,6 @@ add_executable(index
     cimgui/imgui/backends/imgui_impl_sdl.cpp
     cimgui/imgui/backends/imgui_impl_opengl3.h
     cimgui/imgui/backends/imgui_impl_opengl3.cpp
-    ${LUAJIT_SRC}
 )
 
 source_group(external REGULAR_EXPRESSION external)
