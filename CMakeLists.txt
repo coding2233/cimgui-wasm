@@ -16,7 +16,7 @@ endif()
 add_subdirectory(cimgui)
 
 include_directories(src)
-include_directories(cimgui cimgui/imgui cimgui/imgui/backends)
+include_directories(cimgui cimgui/imgui cimgui/imgui/backends lua-5.4.4/src)
 include_directories(SYSTEM external ${SDL2_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIRS})
 
 file(GLOB_RECURSE LUA_SRC lua-5.4.4/src/*.*)

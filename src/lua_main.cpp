@@ -3,17 +3,20 @@
 LuaMain::LuaMain(/* args */)
 {
     global_state_ = luaL_newstate();
-}
 
-LuaMain::~LuaMain()
-{
-    lua_close(global_state_);
     //Load the Lua base library
     luaL_openlibs(global_state_);
     //Registering C functions
     RegisterCFunction();
     //Set the search Lua file folder
     SetLuaSearchPath();
+
+    luaL_dofile(global_state_, "main.lua");
+}
+
+LuaMain::~LuaMain()
+{
+    lua_close(global_state_);
 }
 
 void LuaMain::RegisterCFunction()
@@ -29,7 +32,7 @@ void LuaMain::RegisterCFunction()
 
 void LuaMain::SetLuaSearchPath()
 {
-    // luaL_dostring(global_state_, R"(package.path="./lua-src/?.lua;../lua-src/?.lua;./lua-libs/?.lua;../lua-libs/?.lua;"..package.path)");
+    luaL_dostring(global_state_, R"(package.path="data/lua/?.lua;"..package.path)");
     // luaL_dostring(global_state_, R"(package.cpath="./lua-libs/?.so;../lua-libs/?.so;"..package.cpath)");
 }
 
@@ -46,4 +49,7 @@ void LuaMain::LuaPCall(lua_State *pL, int nargs, int nresults)
 
 void LuaMain::Draw()
 {
+    //获取lua中的showinfo函数
+    lua_getglobal(global_state_, "OnDraw");
+    LuaPCall(global_state_, 0, 0);
 }

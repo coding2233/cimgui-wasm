@@ -2,9 +2,9 @@
 
 extern "C"
 {
-#include "lua-5.4.4/src/lauxlib.h"
-#include "lua-5.4.4/src/lua.h"
-#include "lua-5.4.4/src/lualib.h"
+#include "lauxlib.h"
+#include "lua.h"
+#include "lualib.h"
 }
 
 class LuaMain
