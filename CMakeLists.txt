@@ -19,6 +19,9 @@ include_directories(src)
 include_directories(cimgui cimgui/imgui cimgui/imgui/backends)
 include_directories(SYSTEM external ${SDL2_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIRS})
 
+file(GLOB_RECURSE LUA_SRC lua-5.4.4/src/*.*)
+add_library(LUA_LIBRARY STATIC ${LUA_SRC})
+
 add_executable(index
     src/main.cpp
     cimgui/imgui/backends/imgui_impl_sdl.h
@@ -33,4 +36,4 @@ source_group(src REGULAR_EXPRESSION src)
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++17")
 
-target_link_libraries(index cimgui ${SDL2_INCLUDE_DIRS} ${OPENGL_LIBRARIES})   
+target_link_libraries(index cimgui ${SDL2_INCLUDE_DIRS} ${OPENGL_LIBRARIES} LUA_LIBRARY)   
