@@ -19,7 +19,7 @@ LuaMain::~LuaMain()
     lua_close(global_state_);
 }
 
-int LuaMain::DrawButton(lua_State *pl)
+int DrawButton(lua_State *pl)
 {
     const char *str = lua_tostring(pl, 1);
     bool result = ImGui::Button(str);

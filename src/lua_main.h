@@ -21,8 +21,6 @@ private:
 
     void LuaPCall(lua_State *pL, int nargs, int nresults);
 
-    int DrawButton(lua_State *pl);
-
 public:
     LuaMain(/* args */);
     ~LuaMain();
