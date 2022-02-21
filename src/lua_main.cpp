@@ -19,6 +19,14 @@ LuaMain::~LuaMain()
     lua_close(global_state_);
 }
 
+int LuaMain::DrawButton(lua_State *pl)
+{
+    const char *str = lua_tostring(pl, 1);
+    bool result = ImGui::Button(str);
+    lua_pushboolean(pl, result);
+    return 1;
+}
+
 void LuaMain::RegisterCFunction()
 {
     /*lua_pushcfunction(global_state_, fn);
@@ -28,6 +36,8 @@ void LuaMain::RegisterCFunction()
     // lua_register(global_state_, "print", LuaLog);
     // lua_register(global_state_, "RegisterActor", RegisterActor);
     // lua_register(global_state_, "SendMail", SendMail);
+
+    lua_register(global_state_, "DrawButton", DrawButton);
 }
 
 void LuaMain::SetLuaSearchPath()

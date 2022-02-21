@@ -7,6 +7,8 @@ extern "C"
 #include "lualib.h"
 }
 
+#include "imgui.h"
+
 class LuaMain
 {
 private:
@@ -18,6 +20,8 @@ private:
     void SetLuaSearchPath();
 
     void LuaPCall(lua_State *pL, int nargs, int nresults);
+
+    int DrawButton(lua_State *pl);
 
 public:
     LuaMain(/* args */);
