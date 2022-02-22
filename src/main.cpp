@@ -79,8 +79,6 @@ void main_loop()
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
 
-    lua_main_->Draw();
-
     //0. Custom window
     // ImGui::SetNextWindowPos(ImVec2(10,10));
     ImGui::Begin("Custom Demo", nullptr);
@@ -111,6 +109,7 @@ void main_loop()
     //     // close
     //     ImGuiFileDialog::Instance()->Close();
     // }
+    lua_main_->Draw();
 
     ImGui::End();
 
