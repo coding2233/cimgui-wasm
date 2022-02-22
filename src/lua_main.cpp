@@ -11,7 +11,7 @@ LuaMain::LuaMain(/* args */)
     //Set the search Lua file folder
     SetLuaSearchPath();
 
-    luaL_dofile(global_state_, "main.lua");
+    luaL_dostring(global_state_, R"(require "main")");
 }
 
 LuaMain::~LuaMain()
