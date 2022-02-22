@@ -6,6 +6,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra -Wno-missing-bra
 
 if(${EMSCRIPTEN})
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data/fonts/WenQuanYiMicroHei.ttf DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/data/fonts/)
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data/lua/main.lua DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/data/lua/)
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/index.html DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s ALLOW_MEMORY_GROWTH=1 -O3 -s USE_SDL=2 -s USE_SDL_TTF=2 -std=c++1z --preload-file data")#动态申请内存
 else()
