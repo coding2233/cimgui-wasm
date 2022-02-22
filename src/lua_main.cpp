@@ -62,4 +62,9 @@ void LuaMain::Draw()
     //获取lua中的showinfo函数
     lua_getglobal(global_state_, "OnDraw");
     LuaPCall(global_state_, 0, 0);
+
+    lua_getglobal(global_state_, "ButtonName");
+    LuaPCall(global_state_, 0, 1);
+
+    ImGui::Button(lua_tostring(global_state_, 1));
 }
