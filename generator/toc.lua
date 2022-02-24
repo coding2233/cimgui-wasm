@@ -2,6 +2,13 @@ local defs = require "output/definitions"
 local definitionsPath = "ImGuiForLua/imgui_lua_definitions.h"
 
 
+function WriteToFile(line)
+    local file = io.open(definitionsPath,'a')
+    io.output(file)
+    io.write(line)
+    io.close(file)
+end
+
 function TypeToLua(type)
 if type=="int" then
     return "(int)lua_tonumber"
@@ -20,7 +27,7 @@ end
 end
 
 function WriteFunction(name,funcTab)
-    file = io.open(definitionsPath,'a')
+    local file = io.open(definitionsPath,'a')
     io.output(file)
     io.write("int "..name.."(lua_State *pl)\n")
     io.write("{\n")
@@ -35,13 +42,19 @@ function WriteFunction(name,funcTab)
     if funcTab[1]["ret"]=="void" then
         io.write("\treturn 0;\n")
     else
+        local ret = funcTab[1]["ret"]
         io.write("\treturn 1;\n")
     end
     io.write("}\n\n")
     io.close(file)
 end
 
-
+WriteToFile("#include \"lauxlib.h\"\n")
+WriteToFile("#include \"lua.h\"\n")
+WriteToFile("#include \"lualib.h\"\n")
+WriteToFile("#include \"imgui.h\"\n")
+WriteToFile("#include \"cimgui.h\"\n")
+WriteToFile("\n")
 
 for key, value in pairs(defs) do
     print(key)
