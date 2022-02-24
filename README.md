@@ -20,6 +20,7 @@ md build
 cd build
 emcmake cmake ..
 ninja
+python -m http.server
 ```
 
 ## Building for MacOS
