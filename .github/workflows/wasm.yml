@@ -55,7 +55,7 @@ jobs:
         rm -rf build/
         mkdir build
         cd build
-        $(pwd)/../emsdk/upstream/emscripten/emcmake cmake .. -DLUAJIT_DIR=$(pwd)/../LuaJIT-2.0.5/
+        $(pwd)/../emsdk/upstream/emscripten/emcmake cmake ..
         make
         ls -alh
         cd ..
