@@ -20,11 +20,11 @@ include_directories(src)
 include_directories(cimgui cimgui/imgui cimgui/imgui/backends lua-5.4.4/src)
 include_directories(SYSTEM external ${SDL2_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIRS})
 
-# file(GLOB_RECURSE LUA_SRC lua-5.4.4/src/*.*)
-set(LUAJIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/LuaJIT-2.0.5")
-include(luajit-cmake/LuaJIT.cmake)
+file(GLOB_RECURSE LUA_SRC LuaJIT-2.0.5/src/*.c LuaJIT-2.0.5/src/*.h)
+# set(LUAJIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/LuaJIT-2.0.5")
+# include(luajit-cmake/LuaJIT.cmake)
 
-# add_library(LUA_LIBRARY STATIC ${LUA_SRC})
+add_library(LUA_LIBRARY STATIC ${LUA_SRC})
 
 add_executable(index
     src/main.cpp
@@ -42,4 +42,4 @@ source_group(src REGULAR_EXPRESSION src)
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++17")
 
-target_link_libraries(index cimgui ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} libluajit)   
+target_link_libraries(index cimgui ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} LUA_LIBRARY)   
