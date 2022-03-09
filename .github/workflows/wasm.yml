@@ -54,7 +54,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        $(pwd)/../emsdk/upstream/emscripten/emcmake cmake ..
+        $(pwd)/../emsdk/upstream/emscripten/emcmake cmake .. -DLUAJIT_DIR=$(pwd)/../LuaJIT-2.0.5/
         make
         ls -alh
         cd ..
