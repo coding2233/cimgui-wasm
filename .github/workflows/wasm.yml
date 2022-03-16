@@ -55,6 +55,7 @@ jobs:
         rm -rf build/
         mkdir build
         cd build
+        cp $(pwd)/../LuaJIT-2.0.5/src/libluajit.a ./
         $(pwd)/../emsdk/upstream/emscripten/emcmake cmake ..
         make
         ls -alh
