@@ -38,7 +38,7 @@ jobs:
         sudo apt update
         sudo apt -y install gcc
         cd LuaJIT-2.0.5/src
-        $(pwd)/../emsdk/upstream/emscripten/emmake make
+        $(pwd)/../../emsdk/upstream/emscripten/emmake make
         ls -lah
         cd ../../
     
