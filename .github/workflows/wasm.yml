@@ -29,9 +29,9 @@ jobs:
         git submodule update --init --recursive
         cd mono
         make -j -C sdks/wasm
-        ls -alh sdk/out/
-        ls -alh sdk/out/wasm-bcl
-        ls -alh sdk/out/wasm_tools
+        ls -alh sdks/out/
+        ls -alh sdks/out/wasm-bcl
+        ls -alh sdks/out/wasm_tools
         cd ..
 
     - name: setup emsdk
