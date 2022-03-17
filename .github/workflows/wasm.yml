@@ -22,7 +22,15 @@ jobs:
         ls -alh
         ls -alh ./cimgui
         ls -alh ./cimgui/imgui
-  
+
+    - name: setup mono
+      run: |
+        apt install gnupg ca-certificates
+        apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+        "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
+        apt update
+        apt install -y mono-devel
+        
     - name: setup emsdk
       run: |
         git clone https://github.com/emscripten-core/emsdk.git
@@ -33,14 +41,14 @@ jobs:
         source ./emsdk_env.sh
         cd ..
 
-    - name: lua jit
-      run: |
-        sudo apt update
-        sudo apt -y install gcc
-        cd LuaJIT-2.0.5/src
-        $(pwd)/../../emsdk/upstream/emscripten/emmake make
-        ls -lah
-        cd ../../
+    # - name: lua jit
+    #   run: |
+    #     sudo apt update
+    #     sudo apt -y install gcc
+    #     cd LuaJIT-2.0.5/src
+    #     $(pwd)/../../emsdk/upstream/emscripten/emmake make
+    #     ls -lah
+    #     cd ../../
     
     # - name: cimgui generator
     #   run: |
