@@ -43,4 +43,4 @@ source_group(src REGULAR_EXPRESSION src)
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++17")
 
-target_link_libraries(index cimgui ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${LUA_LIBRARY} mono)   
+target_link_libraries(index cimgui ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${LUA_LIBRARY} libmono)   
