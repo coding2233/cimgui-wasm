@@ -52,6 +52,7 @@ jobs:
 
     - name: build
       run: |
+        rm -rf build/
         mkdir build
         cd build
         $(pwd)/../emsdk/upstream/emscripten/emcmake cmake ..
