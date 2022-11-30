@@ -9,7 +9,6 @@
 #include <math.h>
 #include <iostream>
 #include <array>
-#include "lua_main.h"
 
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
@@ -39,7 +38,7 @@ bool show_demo_window = true;
 bool show_another_window = false;
 ImVec4 clear_color;
 SDL_Window *g_window;
-LuaMain *lua_main_;
+
 
 EM_JS(int, canvas_get_width, (), {
     return Module.canvas.width;
@@ -109,7 +108,6 @@ void main_loop()
     //     // close
     //     ImGuiFileDialog::Instance()->Close();
     // }
-    lua_main_->Draw();
 
     ImGui::End();
 
@@ -274,16 +272,14 @@ int main(int, char **)
     //IM_ASSERT(font != NULL);
     // io.Fonts->AddFontDefault();
     // io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f);
-    io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+    // io.Fonts->AddFontFromFileTTF("data/fonts/WenQuanYiMicroHei.ttf", 14.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
     // resizeCanvas();
 
     g_window = window;
     clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     // Main loop
     g_done = false;
-    lua_main_ = new LuaMain();
     runMainLoop();
-    delete lua_main_;
     // Cleanup
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplSDL2_Shutdown();
